@@ -46,13 +46,13 @@ Use `dplyr` functions to create a table with the number of candidates in each ty
 ## Answer 1
 
 ```{r}
+library(tidyverse)
 fb_ads <- read_csv("data/fb_ads.csv")
 ```
 
 Number of candidates in the dataset: 7014
 
 ```{r}
-library(tidyverse)
 incumbency_table <- fb_ads |>
   group_by(incumbency) |>
   summarize(count = n())
