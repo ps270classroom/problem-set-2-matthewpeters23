@@ -52,7 +52,7 @@ fb_ads <- read.csv("data/fb_ads.csv")
 Number of candidates in the dataset: 7014
 
 ```{r}
-library(dplyr)
+library(tidyverse)
 incumbency_table <- fb_ads |>
   group_by(incumbency) |>
   summarize(count = n())
@@ -83,9 +83,10 @@ party_incumbent_promote <- fb_ads |>
   filter(office == "US House" | office == "US Senate") |>
   group_by(party, incumbency) |>
   summarize(promote_prop = mean(ad_tone_promote, na.rm = TRUE))
-knitr::kable(party_incumbent_promote, col.names = c("Party Affiliation", "Incumbancy Status", "Average Self-Promotion"))
+knitr::kable(party_incumbent_promote, col.names = c("Party Affiliation", "Incumbancy Status", "Proportion of Self-Promotion"))
 ```
 
+On average, incumbent democrats sponsored the most promoting ads, with approximately 85.4% of ads falling into that category. 
 
 \newpage
 
@@ -100,7 +101,20 @@ Create a histogram of this variable for just the US House races. Save the ggplot
 
 ## Answer 3
 
+```{r}
+fb_ads <- fb_ads |>
+  mutate(impressions_millions = impressions / 1000000)
+```
 
+```{r}
+plot_q3 <- fb_ads |>
+  filter(office == "US House") |>
+  ggplot(mapping = aes(x = impressions_millions)) +
+  geom_histogram()
+plot_q3
+```
+
+The histogram is positively skewed, meaning the majority of the House candidates had less than 10 million ads impressions on Facebook, with only the tail end passing the 10 million marker in the visual.
 
 \newpage
 
@@ -123,6 +137,18 @@ You do not need to exactly match the labels, but you should have informative lab
 
 ## Answer 4
 
+```{r}
+fb_top_plot <- fb_ads |>
+  filter(office == "US House") |>
+  slice_max(impressions_millions, n = 15) |>
+  ggplot(mapping = aes(x = impressions_millions,
+                       y = fct_reorder(cand_name_last, impressions_millions))) +
+  geom_col(mapping = aes(fill = party)) +
+  scale_fill_manual(values = c(R = "red", D = "blue")) +
+  labs(x = "Estimated Total Impressions of Facebook Ads by the Millions",
+       y = "US House Candidates")
+fb_top_plot
+```
 
 
 \newpage
