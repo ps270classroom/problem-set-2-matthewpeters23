@@ -1,6 +1,6 @@
 ---
 title: "Problem Set 2: Data Wrangling"
-author: Your Name Here
+author: Matt Peters
 output: pdf_document
 ---
 
